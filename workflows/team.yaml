@@ -1,0 +1,294 @@
+# Team 工作流模板
+# Multi-Agent 协作模式：多个 Agent 协同工作
+
+name: "team"
+description: "Multi-Agent 协作模式，多个专业 Agent 协同完成复杂任务"
+version: "1.0.0"
+
+# 执行配置
+execution:
+  mode: "team"
+  max_iterations: 20  # 最大迭代次数
+  timeout: 7200  # 超时时间（秒）
+  auto_retry: true  # 自动重试
+  max_retries: 3  # 最大重试次数
+
+# Team 配置
+team:
+  size: 5  # Team 大小（Agent 数量）
+  coordination: "centralized"  # 协调模式：centralized | distributed
+  communication: "message_passing"  # 通信方式：message_passing | shared_memory
+  leader: "coordinator_agent"  # Team Leader
+
+  # Agent 角色定义
+  agents:
+    - name: "coordinator"
+      role: "协调者"
+      description: "协调 Team 工作，分配任务，监控进度"
+      skills:
+        - "/start"
+        - "/knowledge"
+      priority: "high"
+
+    - name: "analyst"
+      role: "分析师"
+      description: "需求分析和架构设计"
+      skills:
+        - "/prd"
+        - "/patterns"
+      priority: "high"
+
+    - name: "developer"
+      role: "开发者"
+      description: "代码实现和单元测试"
+      skills:
+        - "/patterns"
+        - "/knowledge"
+      priority: "medium"
+      count: 2  # 2 个开发者
+
+    - name: "reviewer"
+      role: "审查者"
+      description: "代码审查和质量检查"
+      skills:
+        - "/analyze-error"
+        - "/patterns"
+      priority: "medium"
+
+    - name: "learner"
+      role: "学习者"
+      description: "知识进化和反思学习"
+      skills:
+        - "/evolve"
+        - "/reflect"
+      priority: "low"
+
+# 阶段定义
+stages:
+  - name: "Team 初始化"
+    id: "init"
+    description: "初始化 Team 并分配角色"
+    run_once: true
+    agents: ["coordinator"]
+    outputs:
+      - "team_structure"
+      - "role_assignments"
+
+  - name: "需求分析"
+    id: "analyze"
+    description: "分析需求并生成 PRD"
+    depends_on: ["init"]
+    agents: ["analyst", "coordinator"]
+    gates:
+      - "prd_gate"
+    outputs:
+      - "prd_document"
+      - "requirements_list"
+
+  - name: "任务分解"
+    id: "decompose"
+    description: "将需求分解为可执行的任务"
+    depends_on: ["analyze"]
+    agents: ["coordinator", "analyst"]
+    outputs:
+      - "task_list"
+      - "task_dependencies"
+
+  - name: "并行开发"
+    id: "develop"
+    description: "多个开发者并行实现功能"
+    depends_on: ["decompose"]
+    agents: ["developer"]
+    parallel: true
+    max_parallel: 2  # 最多 2 个开发者并行工作
+    outputs:
+      - "source_code"
+      - "unit_tests"
+
+  - name: "代码集成"
+    id: "integrate"
+    description: "集成各个开发者的代码"
+    depends_on: ["develop"]
+    agents: ["coordinator", "developer"]
+    gates:
+      - "compile_gate"
+    outputs:
+      - "integrated_code"
+      - "integration_report"
+
+  - name: "代码审查"
+    id: "review"
+    description: "审查代码质量和规范"
+    depends_on: ["integrate"]
+    agents: ["reviewer"]
+    outputs:
+      - "review_report"
+      - "issues_found"
+
+  - name: "问题修复"
+    id: "fix"
+    description: "修复审查发现的问题"
+    depends_on: ["review"]
+    condition: "issues_found > 0"
+    agents: ["developer", "reviewer"]
+    outputs:
+      - "fix_result"
+      - "fixed_issues"
+
+  - name: "最终验证"
+    id: "verify"
+    description: "最终验证和测试"
+    depends_on: ["fix"]
+    agents: ["reviewer", "coordinator"]
+    gates:
+      - "commit_gate"
+    outputs:
+      - "verification_result"
+      - "test_results"
+
+  - name: "知识沉淀"
+    id: "learn"
+    description: "从协作中学习并更新知识库"
+    depends_on: ["verify"]
+    agents: ["learner"]
+    skills:
+      - "/evolve"
+      - "/reflect"
+    outputs:
+      - "evolution_report"
+      - "team_insights"
+
+# 协作协议
+collaboration:
+  # 任务分配策略
+  task_assignment:
+    strategy: "load_balanced"  # load_balanced | skill_based | priority_based
+    max_tasks_per_agent: 3  # 每个 Agent 最多同时处理任务数
+
+  # 通信协议
+  communication:
+    protocol: "message_queue"  # message_queue | direct | broadcast
+    message_format: "json"
+    timeout: 60  # 消息超时（秒）
+
+  # 冲突解决
+  conflict_resolution:
+    strategy: "coordinator_decides"  # coordinator_decides | voting | consensus
+    timeout: 300  # 冲突解决超时（秒）
+
+  # 进度同步
+  progress_sync:
+    interval: 60  # 同步间隔（秒）
+    method: "push"  # push | pull
+
+# 质量门配置
+gates:
+  prd_gate:
+    enabled: true
+    require_confirmation: true
+    checks:
+      - "需求完整性检查"
+      - "需求清晰度检查"
+      - "可行性评估"
+
+  compile_gate:
+    enabled: true
+    auto_retry: true
+    max_retries: 3
+    checks:
+      - "语法错误检查"
+      - "类型错误检查"
+      - "导入错误检查"
+      - "集成冲突检查"
+
+  commit_gate:
+    enabled: true
+    checks:
+      - "敏感文件检查"
+      - "冲突检查"
+      - "测试覆盖率检查"
+      - "代码风格检查"
+      - "Team 审查通过"
+
+# 错误处理
+error_handling:
+  on_agent_failure:
+    action: "reassign"  # reassign | retry | abort
+    max_retries: 3
+    reassign_to: "backup_agent"
+
+  on_stage_failure:
+    action: "team_discussion"  # team_discussion | retry | abort
+    timeout: 600  # 讨论超时（秒）
+
+  on_conflict:
+    action: "coordinator_resolve"  # coordinator_resolve | voting | abort
+    timeout: 300
+
+  on_timeout:
+    action: "checkpoint_and_continue"
+    save_state: true
+
+# 通知配置
+notifications:
+  on_start: true
+  on_complete: true
+  on_error: true
+  on_agent_failure: true
+  on_conflict: true
+  on_milestone: true  # 里程碑通知
+  channels:
+    - "console"
+    - "log"
+
+# 状态同步
+sync:
+  before_execution: true
+  after_execution: true
+  on_stage_complete: true
+  on_agent_complete: true
+  direction: "bidirectional"
+
+# 记忆管理
+memory:
+  save_context: true
+  save_decisions: true
+  save_team_discussions: true  # 保存 Team 讨论
+  save_agent_interactions: true  # 保存 Agent 交互
+  ttl_hours: 48  # 2 天
+
+# 知识图谱
+knowledge_graph:
+  auto_update: true
+  link_decisions: true
+  link_patterns: true
+  link_team_members: true  # 关联 Team 成员
+  link_collaborations: true  # 关联协作记录
+
+# 性能监控
+monitoring:
+  enabled: true
+  metrics:
+    - "agent_utilization"  # Agent 利用率
+    - "task_completion_rate"  # 任务完成率
+    - "collaboration_efficiency"  # 协作效率
+    - "communication_overhead"  # 通信开销
+  alert_thresholds:
+    agent_utilization: 0.8  # Agent 利用率 > 80% 时告警
+    task_completion_rate: 0.7  # 任务完成率 < 70% 时告警
+
+# 日志配置
+logging:
+  level: "INFO"
+  file: ".agent/logs/team.log"
+  max_size: "50MB"
+  retention_days: 60
+  structured: true
+  include_agent_id: true  # 包含 Agent ID
+  include_team_context: true  # 包含 Team 上下文
+
+# Ralph 集成
+ralph:
+  enabled: false  # 是否启用 Ralph 持久化循环
+  checkpoint_interval: 15  # 检查点间隔（分钟）
+  max_iterations: 50  # 最大迭代次数

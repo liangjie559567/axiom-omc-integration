@@ -1,0 +1,239 @@
+# Ralph 工作流模板
+# 持久化执行循环：自我引用的持续执行模式
+
+name: "ralph"
+description: "持久化执行循环，支持长时间运行和自动恢复"
+version: "1.0.0"
+
+# 执行配置
+execution:
+  mode: "ralph"
+  persistent: true  # 持久化执行
+  max_iterations: 100  # 最大迭代次数（0 表示无限循环）
+  timeout: 0  # 超时时间（0 表示无超时）
+  auto_retry: true  # 自动重试
+  max_retries: 5  # 最大重试次数
+  checkpoint_interval: 10  # 检查点间隔（分钟）
+
+# 循环配置
+loop:
+  type: "self_referential"  # 自我引用循环
+  stop_conditions:
+    - "all_tasks_completed"  # 所有任务完成
+    - "user_interrupt"  # 用户中断
+    - "max_iterations_reached"  # 达到最大迭代次数
+    - "critical_error"  # 严重错误
+
+  verification:
+    enabled: true  # 启用验证
+    frequency: "every_iteration"  # 验证频率
+    verifier: "verifier_agent"  # 验证器 Agent
+
+# 阶段定义
+stages:
+  - name: "初始化"
+    id: "init"
+    description: "初始化执行环境和加载上下文"
+    run_once: true  # 只运行一次
+    skills:
+      - "/start"  # 启动系统并加载上下文
+    outputs:
+      - "initial_context"
+      - "task_queue"
+
+  - name: "任务规划"
+    id: "plan"
+    description: "规划下一步要执行的任务"
+    skills:
+      - "/knowledge"  # 查询知识库
+      - "/patterns"  # 查看代码模式库
+    outputs:
+      - "task_plan"
+      - "execution_strategy"
+
+  - name: "任务执行"
+    id: "execute"
+    description: "执行当前任务"
+    depends_on: ["plan"]
+    parallel: true  # 支持并行执行
+    max_parallel: 5  # 最大并行数
+    outputs:
+      - "execution_result"
+      - "artifacts"
+
+  - name: "验证检查"
+    id: "verify"
+    description: "验证执行结果"
+    depends_on: ["execute"]
+    gates:
+      - "compile_gate"  # 编译检查
+      - "test_gate"  # 测试检查
+    outputs:
+      - "verification_result"
+      - "issues_found"
+
+  - name: "问题修复"
+    id: "fix"
+    description: "修复发现的问题"
+    depends_on: ["verify"]
+    condition: "issues_found > 0"  # 仅在发现问题时执行
+    skills:
+      - "/analyze-error"  # 分析错误
+    outputs:
+      - "fix_result"
+      - "fixed_issues"
+
+  - name: "状态更新"
+    id: "update"
+    description: "更新任务状态和进度"
+    depends_on: ["verify", "fix"]
+    outputs:
+      - "updated_state"
+      - "progress_report"
+
+  - name: "反思学习"
+    id: "reflect"
+    description: "反思本次迭代并学习"
+    depends_on: ["update"]
+    skills:
+      - "/reflect"  # 生成反思报告
+      - "/evolve"  # 触发知识进化
+    outputs:
+      - "reflection_report"
+      - "learned_patterns"
+
+  - name: "循环决策"
+    id: "decide"
+    description: "决定是否继续循环"
+    depends_on: ["reflect"]
+    outputs:
+      - "continue_loop"  # true | false
+      - "next_iteration_plan"
+
+# 质量门配置
+gates:
+  compile_gate:
+    enabled: true
+    auto_retry: true
+    max_retries: 3
+    checks:
+      - "语法错误检查"
+      - "类型错误检查"
+      - "导入错误检查"
+
+  test_gate:
+    enabled: true
+    auto_retry: true
+    max_retries: 2
+    checks:
+      - "单元测试通过"
+      - "集成测试通过"
+      - "测试覆盖率 >= 80%"
+
+  commit_gate:
+    enabled: true
+    checks:
+      - "敏感文件检查"
+      - "冲突检查"
+      - "代码风格检查"
+
+# 检查点配置
+checkpoint:
+  enabled: true  # 启用检查点
+  interval: 10  # 检查点间隔（分钟）
+  path: ".agent/checkpoints/ralph/"
+  max_checkpoints: 10  # 最多保留检查点数
+  auto_save: true  # 自动保存
+  save_on_error: true  # 错误时保存
+
+# 恢复配置
+recovery:
+  enabled: true  # 启用自动恢复
+  from_checkpoint: true  # 从检查点恢复
+  on_startup: true  # 启动时自动恢复
+  max_recovery_attempts: 3  # 最大恢复尝试次数
+
+# 错误处理
+error_handling:
+  on_stage_failure:
+    action: "retry"  # retry | skip | abort
+    max_retries: 5
+    retry_delay: 10  # 重试延迟（秒）
+    exponential_backoff: true  # 指数退避
+
+  on_gate_failure:
+    action: "fix"  # retry | skip | abort | fix
+    notify: true
+    auto_fix: true  # 自动修复
+
+  on_timeout:
+    action: "checkpoint_and_continue"  # 保存检查点并继续
+    save_state: true
+
+  on_critical_error:
+    action: "abort"
+    save_state: true
+    notify: true
+
+# 通知配置
+notifications:
+  on_start: true
+  on_complete: true
+  on_error: true
+  on_checkpoint: false
+  on_iteration_complete: false
+  on_verification_failure: true
+  channels:
+    - "console"
+    - "log"
+
+# 状态同步
+sync:
+  before_execution: true
+  after_execution: true
+  on_checkpoint: true  # 检查点时同步
+  on_iteration_complete: true  # 迭代完成时同步
+  direction: "bidirectional"
+
+# 记忆管理
+memory:
+  save_context: true
+  save_decisions: true
+  save_iterations: true  # 保存迭代历史
+  ttl_hours: 168  # 7 天
+  max_iterations_stored: 100  # 最多存储迭代数
+
+# 知识图谱
+knowledge_graph:
+  auto_update: true
+  link_decisions: true
+  link_patterns: true
+  link_iterations: true  # 关联迭代记录
+
+# 性能监控
+monitoring:
+  enabled: true
+  metrics:
+    - "iteration_duration"  # 迭代耗时
+    - "success_rate"  # 成功率
+    - "error_rate"  # 错误率
+    - "verification_pass_rate"  # 验证通过率
+  alert_thresholds:
+    error_rate: 0.3  # 错误率 > 30% 时告警
+    iteration_duration: 600  # 迭代耗时 > 10 分钟时告警
+
+# 日志配置
+logging:
+  level: "INFO"
+  file: ".agent/logs/ralph.log"
+  max_size: "50MB"
+  retention_days: 90
+  structured: true  # 结构化日志
+  include_context: true  # 包含上下文信息
+
+# Ultrawork 集成
+ultrawork:
+  enabled: true  # 启用 Ultrawork（最大并行度）
+  max_parallel_tasks: 10  # 最大并行任务数
+  task_queue_size: 50  # 任务队列大小
+  worker_pool_size: 5  # Worker 池大小

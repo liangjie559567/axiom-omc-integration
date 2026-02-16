@@ -1,0 +1,50 @@
+{
+  "mcpServers": {
+    "sequential-thinking": {
+      "command": "node",
+      "args": [
+        "path/to/@modelcontextprotocol/server-sequential-thinking/dist/index.js"
+      ]
+    },
+    "software-planning-tool": {
+      "command": "node",
+      "args": [
+        "path/to/Software-planning-mcp/build/index.js"
+      ]
+    },
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ]
+    },
+    "firecrawl": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "firecrawl-mcp"
+      ],
+      "env": {
+        "FIRECRAWL_API_KEY": "your-firecrawl-api-key-here"
+      }
+    },
+    "desktop-commander": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@wonderwhy-er/desktop-commander@latest"
+      ]
+    },
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "your-github-token-here"
+      }
+    }
+  }
+}

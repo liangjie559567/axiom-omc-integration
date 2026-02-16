@@ -1,0 +1,67 @@
+{
+  "name": "axiom-omc-integration",
+  "description": "Axiom + OMC 智能开发整合系统 - 提供命令路由、状态同步、质量门、知识演化和记忆管理功能",
+  "version": "1.0.0",
+  "author": {
+    "name": "CGTall AutoPipeline Team",
+    "email": "team@cgtall.com"
+  },
+  "homepage": "https://github.com/cgtall/axiom-omc-integration",
+  "repository": "https://github.com/cgtall/axiom-omc-integration",
+  "license": "MIT",
+  "keywords": [
+    "axiom",
+    "omc",
+    "integration",
+    "command-routing",
+    "state-sync",
+    "quality-gates",
+    "knowledge-evolution",
+    "memory-management",
+    "multi-agent",
+    "workflow-automation"
+  ],
+  "engines": {
+    "claude-code": ">=1.0.0"
+  },
+  "dependencies": {},
+  "main": "commands/index.js",
+  "skills": [
+    "skills/start.md",
+    "skills/prd.md",
+    "skills/analyze-error.md",
+    "skills/evolve.md",
+    "skills/reflect.md",
+    "skills/patterns.md",
+    "skills/knowledge.md"
+  ],
+  "commands": [
+    "commands/command-router.js",
+    "commands/state-sync.js",
+    "commands/prd-gate.js",
+    "commands/compile-gate.js",
+    "commands/commit-gate.js",
+    "commands/memory-manager.js"
+  ],
+  "workflows": [
+    "workflows/autopilot.yaml",
+    "workflows/ralph.yaml",
+    "workflows/team.yaml",
+    "workflows/ultrawork.yaml"
+  ],
+  "config": {
+    "defaultExecutionMode": "ultrawork",
+    "enableAutoSync": true,
+    "conflictStrategy": "latest",
+    "qualityGates": {
+      "prd": true,
+      "compile": true,
+      "commit": true
+    },
+    "memorySettings": {
+      "autoRecord": true,
+      "searchEngine": "faiss",
+      "versionControl": true
+    }
+  }
+}

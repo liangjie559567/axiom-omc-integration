@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Build outputs
+dist/
+build/
+*.log
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# State directories
+.omc/
+.agent/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# MCP configuration (contains secrets)
+.mcp.json
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

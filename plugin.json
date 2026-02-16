@@ -1,0 +1,98 @@
+{
+  "name": "axiom-omc",
+  "version": "1.0.0",
+  "description": "Axiom-OMC 整合插件 - 统一的智能开发工作流平台",
+  "main": "src/plugin.js",
+  "type": "module",
+  "author": "Axiom-OMC Team",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "plugin",
+    "axiom",
+    "omc",
+    "agent",
+    "workflow",
+    "memory",
+    "sync"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "claudeCode": {
+    "plugin": true,
+    "entry": "src/plugin.js",
+    "commands": [
+      "agent:list",
+      "agent:info",
+      "agent:execute",
+      "agent:status",
+      "agent:history",
+      "agent:cancel",
+      "workflow:list",
+      "workflow:start",
+      "workflow:status",
+      "workflow:next",
+      "workflow:goto",
+      "workflow:active",
+      "workflow:stop",
+      "memory:decision:add",
+      "memory:decision:list",
+      "memory:knowledge:add",
+      "memory:knowledge:search",
+      "memory:stats",
+      "sync:register",
+      "sync:run",
+      "sync:list",
+      "sync:history",
+      "plugin:info",
+      "plugin:status",
+      "plugin:reload"
+    ],
+    "config": {
+      "agent": {
+        "maxConcurrent": 5,
+        "timeout": 300000
+      },
+      "router": {
+        "conflictStrategy": "prefix",
+        "enableHistory": true,
+        "maxHistorySize": 1000
+      },
+      "sync": {
+        "axiomRoot": ".agent",
+        "omcRoot": ".omc",
+        "conflictStrategy": "newer_wins",
+        "autoSync": false,
+        "syncInterval": 60000
+      },
+      "memory": {
+        "storageDir": ".omc/memory",
+        "enablePatternExtraction": true,
+        "patternThreshold": 3
+      },
+      "workflow": {
+        "defaultWorkflowType": "omc",
+        "enableAutoTransition": true,
+        "enableValidation": true
+      }
+    }
+  },
+  "scripts": {
+    "test": "jest",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration",
+    "test:benchmark": "jest tests/benchmark",
+    "lint": "eslint src tests",
+    "format": "prettier --write \"src/**/*.js\" \"tests/**/*.js\""
+  },
+  "dependencies": {
+    "chalk": "^5.3.0"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.2.4"
+  }
+}

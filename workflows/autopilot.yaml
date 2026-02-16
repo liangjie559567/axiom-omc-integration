@@ -1,0 +1,175 @@
+# Autopilot 工作流模板
+# 自动驾驶模式：从需求到实现的全自动执行
+
+name: "autopilot"
+description: "自动驾驶模式，从需求分析到代码实现的全流程自动化"
+version: "1.0.0"
+
+# 执行配置
+execution:
+  mode: "autopilot"
+  max_iterations: 10  # 最大迭代次数
+  timeout: 3600  # 超时时间（秒）
+  auto_retry: true  # 自动重试
+  max_retries: 3  # 最大重试次数
+
+# 阶段定义
+stages:
+  - name: "需求分析"
+    id: "analyze"
+    description: "分析用户需求，生成详细的需求文档"
+    skills:
+      - "/start"  # 启动系统并加载上下文
+      - "/prd"  # 生成产品需求文档
+    gates:
+      - "prd_gate"  # PRD 质量门检查
+    outputs:
+      - "prd_document"
+      - "requirements_list"
+
+  - name: "架构设计"
+    id: "design"
+    description: "设计系统架构和模块划分"
+    depends_on: ["analyze"]
+    skills:
+      - "/patterns"  # 查看代码模式库
+      - "/knowledge"  # 查询知识库
+    outputs:
+      - "architecture_design"
+      - "module_structure"
+
+  - name: "代码实现"
+    id: "implement"
+    description: "根据设计文档实现代码"
+    depends_on: ["design"]
+    parallel: true  # 支持并行执行
+    max_parallel: 3  # 最大并行数
+    outputs:
+      - "source_code"
+      - "unit_tests"
+
+  - name: "编译检查"
+    id: "compile"
+    description: "编译代码并检查语法错误"
+    depends_on: ["implement"]
+    gates:
+      - "compile_gate"  # 编译质量门检查
+    outputs:
+      - "compile_result"
+
+  - name: "测试验证"
+    id: "test"
+    description: "运行单元测试和集成测试"
+    depends_on: ["compile"]
+    outputs:
+      - "test_results"
+      - "coverage_report"
+
+  - name: "代码审查"
+    id: "review"
+    description: "自动代码审查和质量检查"
+    depends_on: ["test"]
+    skills:
+      - "/analyze-error"  # 分析错误
+    outputs:
+      - "review_report"
+      - "quality_metrics"
+
+  - name: "提交代码"
+    id: "commit"
+    description: "提交代码到版本控制系统"
+    depends_on: ["review"]
+    gates:
+      - "commit_gate"  # 提交质量门检查
+    outputs:
+      - "commit_hash"
+      - "commit_message"
+
+  - name: "知识进化"
+    id: "evolve"
+    description: "从本次执行中学习并更新知识库"
+    depends_on: ["commit"]
+    skills:
+      - "/evolve"  # 触发知识进化
+      - "/reflect"  # 生成反思报告
+    outputs:
+      - "evolution_report"
+      - "lessons_learned"
+
+# 质量门配置
+gates:
+  prd_gate:
+    enabled: true
+    require_confirmation: true  # 需要用户确认
+    checks:
+      - "需求完整性检查"
+      - "需求清晰度检查"
+      - "可行性评估"
+
+  compile_gate:
+    enabled: true
+    auto_retry: true  # 自动重试
+    max_retries: 3
+    checks:
+      - "语法错误检查"
+      - "类型错误检查"
+      - "导入错误检查"
+
+  commit_gate:
+    enabled: true
+    checks:
+      - "敏感文件检查"
+      - "冲突检查"
+      - "测试覆盖率检查"
+      - "代码风格检查"
+
+# 错误处理
+error_handling:
+  on_stage_failure:
+    action: "retry"  # retry | skip | abort
+    max_retries: 3
+    retry_delay: 5  # 重试延迟（秒）
+
+  on_gate_failure:
+    action: "abort"  # retry | skip | abort
+    notify: true  # 通知用户
+
+  on_timeout:
+    action: "abort"
+    save_state: true  # 保存状态以便恢复
+
+# 通知配置
+notifications:
+  on_start: false
+  on_complete: true
+  on_error: true
+  on_gate_check: true
+  channels:
+    - "console"  # 控制台输出
+    - "log"  # 日志文件
+
+# 状态同步
+sync:
+  before_execution: true  # 执行前同步
+  after_execution: true  # 执行后同步
+  on_stage_complete: false  # 阶段完成后同步
+  direction: "bidirectional"  # axiom_to_omc | omc_to_axiom | bidirectional
+
+# 记忆管理
+memory:
+  save_context: true  # 保存执行上下文
+  save_decisions: true  # 保存决策记录
+  ttl_hours: 24  # 上下文保留时间（小时）
+
+# 知识图谱
+knowledge_graph:
+  auto_update: true  # 自动更新知识图谱
+  link_decisions: true  # 关联决策记录
+  link_patterns: true  # 关联代码模式
+
+# 日志配置
+logging:
+  level: "INFO"  # DEBUG | INFO | WARNING | ERROR
+  file: ".agent/logs/autopilot.log"
+  max_size: "10MB"
+  retention_days: 30

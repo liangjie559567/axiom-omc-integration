@@ -1,0 +1,73 @@
+# Axiom + OMC 整合配置
+version: "1.0"
+enabled: true
+
+# 系统优先级
+priority:
+  task_execution: "omc"      # 任务执行由 OMC 主导
+  memory_management: "axiom" # 记忆管理由 Axiom 主导
+  knowledge_evolution: "axiom" # 知识进化由 Axiom 主导
+  git_management: "omc"      # Git 管理由 OMC 主导
+
+# 同步配置
+sync:
+  auto_sync: true            # 自动同步
+  sync_interval: 60          # 同步间隔（秒）
+  sync_on_command: true      # 命令执行前同步
+  sync_on_completion: true   # 任务完成后同步
+
+# 门禁配置
+gates:
+  prd_gate:
+    enabled: true
+    require_confirmation: true
+
+  compile_gate:
+    enabled: true
+    auto_retry: true
+    max_retries: 3
+
+  commit_gate:
+    enabled: true
+    check_sensitive_files: true
+    check_conflicts: true
+
+# 知识进化配置
+evolution:
+  auto_evolve: true          # 任务完成后自动进化
+  pattern_threshold: 3       # 模式出现 3 次后提炼
+  knowledge_retention: 90    # 知识保留天数
+
+# 错误处理配置
+error_handling:
+  check_known_issues: true   # 优先查询已知问题
+  collaborative_analysis: true # 协同分析
+  auto_fix: true             # 自动修复
+  max_retries: 3             # 最大重试次数
+
+# 命令路由配置
+command_routing:
+  omc_priority:
+    - /autopilot
+    - /ralph
+    - /team
+    - /ultrawork
+    - /plan
+
+  axiom_priority:
+    - /start
+    - /prd
+    - /analyze-error
+    - /evolve
+    - /reflect
+
+  collaborative:
+    - /status
+    - /sync
+    - /rollback
+
+# 冲突解决配置
+conflict_resolution:
+  gate_strategy: "strict"    # strict | lenient | custom
+  state_sync_strategy: "latest" # latest | omc_priority | axiom_priority
+  git_conflict_strategy: "omc_priority"

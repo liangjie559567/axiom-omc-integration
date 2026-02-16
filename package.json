@@ -1,0 +1,61 @@
+{
+  "name": "axiom-omc-superpowers-integration",
+  "version": "1.0.0",
+  "description": "统一的智能开发工作流平台 - 整合 Axiom、OMC 和 Superpowers",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/unit",
+    "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/integration",
+    "test:e2e": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/e2e",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "lint": "eslint src/ tests/",
+    "lint:fix": "eslint src/ tests/ --fix",
+    "format": "prettier --write \"src/**/*.js\" \"tests/**/*.js\"",
+    "format:check": "prettier --check \"src/**/*.js\" \"tests/**/*.js\"",
+    "build": "node scripts/build.js",
+    "benchmark": "node scripts/benchmark.js",
+    "prepare": "husky install"
+  },
+  "keywords": [
+    "claude-code",
+    "ai-assistant",
+    "development-workflow",
+    "agent-system",
+    "memory-management",
+    "knowledge-evolution"
+  ],
+  "author": "Axiom-OMC-Superpowers Integration Team",
+  "license": "MIT",
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "vectra": "latest",
+    "markdown-it": "^14.0.0",
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "chokidar": "^3.5.3",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.11",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-jest": "^27.6.1",
+    "prettier": "^3.1.1",
+    "benchmark": "^2.1.4",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
+}

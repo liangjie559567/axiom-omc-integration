@@ -1,0 +1,361 @@
+# Ultrawork 工作流模板
+# 最大并行度执行模式：极致的并行处理能力
+
+name: "ultrawork"
+description: "最大并行度执行模式，充分利用系统资源进行并行处理"
+version: "1.0.0"
+
+# 执行配置
+execution:
+  mode: "ultrawork"
+  max_iterations: 50  # 最大迭代次数
+  timeout: 3600  # 超时时间（秒）
+  auto_retry: true  # 自动重试
+  max_retries: 3  # 最大重试次数
+
+# 并行配置
+parallelism:
+  max_parallel_tasks: 20  # 最大并行任务数
+  max_parallel_stages: 5  # 最大并行阶段数
+  worker_pool_size: 10  # Worker 池大小
+  task_queue_size: 100  # 任务队列大小
+  scheduling: "dynamic"  # 调度策略：dynamic | static | adaptive
+
+  # 资源限制
+  resource_limits:
+    max_cpu_percent: 80  # 最大 CPU 使用率
+    max_memory_mb: 4096  # 最大内存使用（MB）
+    max_disk_io_mbps: 100  # 最大磁盘 I/O（MB/s）
+
+  # 负载均衡
+  load_balancing:
+    enabled: true
+    strategy: "least_loaded"  # least_loaded | round_robin | random
+    rebalance_interval: 30  # 重新平衡间隔（秒）
+
+# 阶段定义
+stages:
+  - name: "初始化"
+    id: "init"
+    description: "初始化执行环境和任务队列"
+    run_once: true
+    parallel: false
+    skills:
+      - "/start"
+    outputs:
+      - "initial_context"
+      - "task_queue"
+
+  - name: "任务分解"
+    id: "decompose"
+    description: "将大任务分解为可并行的小任务"
+    depends_on: ["init"]
+    parallel: false
+    skills:
+      - "/knowledge"
+      - "/patterns"
+    outputs:
+      - "task_list"
+      - "dependency_graph"
+
+  - name: "并行执行"
+    id: "execute"
+    description: "并行执行所有任务"
+    depends_on: ["decompose"]
+    parallel: true
+    max_parallel: 20  # 最大并行数
+    dynamic_scaling: true  # 动态扩展
+    outputs:
+      - "execution_results"
+      - "artifacts"
+
+  - name: "结果聚合"
+    id: "aggregate"
+    description: "聚合所有并行任务的结果"
+    depends_on: ["execute"]
+    parallel: false
+    outputs:
+      - "aggregated_results"
+      - "summary_report"
+
+  - name: "质量检查"
+    id: "quality_check"
+    description: "并行检查所有结果的质量"
+    depends_on: ["aggregate"]
+    parallel: true
+    max_parallel: 10
+    gates:
+      - "compile_gate"
+      - "test_gate"
+    outputs:
+      - "quality_report"
+      - "issues_found"
+
+  - name: "并行修复"
+    id: "fix"
+    description: "并行修复发现的问题"
+    depends_on: ["quality_check"]
+    condition: "issues_found > 0"
+    parallel: true
+    max_parallel: 10
+    skills:
+      - "/analyze-error"
+    outputs:
+      - "fix_results"
+      - "fixed_issues"
+
+  - name: "最终集成"
+    id: "integrate"
+    description: "集成所有修复后的结果"
+    depends_on: ["fix"]
+    parallel: false
+    gates:
+      - "commit_gate"
+    outputs:
+      - "integrated_result"
+      - "integration_report"
+
+  - name: "知识进化"
+    id: "evolve"
+    description: "从并行执行中学习"
+    depends_on: ["integrate"]
+    parallel: false
+    skills:
+      - "/evolve"
+      - "/reflect"
+    outputs:
+      - "evolution_report"
+      - "performance_insights"
+
+# 任务调度
+scheduling:
+  # 调度策略
+  strategy: "priority_based"  # priority_based | fifo | lifo | shortest_first
+
+  # 优先级配置
+  priority:
+    high: 10
+    medium: 5
+    low: 1
+
+  # 依赖处理
+  dependency_resolution:
+    method: "topological_sort"  # topological_sort | level_order
+    parallel_levels: true  # 同一层级并行执行
+
+  # 任务分组
+  task_grouping:
+    enabled: true
+    strategy: "similarity_based"  # similarity_based | size_based | random
+    max_group_size: 5
+
+# Worker 配置
+workers:
+  # Worker 类型
+  types:
+    - name: "fast_worker"
+      count: 5
+      priority: "high"
+      resource_allocation:
+        cpu_percent: 20
+        memory_mb: 512
+
+    - name: "standard_worker"
+      count: 3
+      priority: "medium"
+      resource_allocation:
+        cpu_percent: 15
+        memory_mb: 256
+
+    - name: "background_worker"
+      count: 2
+      priority: "low"
+      resource_allocation:
+        cpu_percent: 10
+        memory_mb: 128
+
+  # Worker 生命周期
+  lifecycle:
+    startup_timeout: 30  # 启动超时（秒）
+    shutdown_timeout: 60  # 关闭超时（秒）
+    idle_timeout: 300  # 空闲超时（秒）
+    max_task_duration: 600  # 最大任务执行时间（秒）
+
+  # Worker 健康检查
+  health_check:
+    enabled: true
+    interval: 30  # 检查间隔（秒）
+    timeout: 10  # 检查超时（秒）
+    max_failures: 3  # 最大失败次数
+
+# 质量门配置
+gates:
+  compile_gate:
+    enabled: true
+    auto_retry: true
+    max_retries: 3
+    parallel_check: true  # 并行检查
+    checks:
+      - "语法错误检查"
+      - "类型错误检查"
+      - "导入错误检查"
+
+  test_gate:
+    enabled: true
+    auto_retry: true
+    max_retries: 2
+    parallel_check: true
+    checks:
+      - "单元测试通过"
+      - "集成测试通过"
+      - "测试覆盖率 >= 80%"
+
+  commit_gate:
+    enabled: true
+    parallel_check: false  # 串行检查
+    checks:
+      - "敏感文件检查"
+      - "冲突检查"
+      - "代码风格检查"
+
+# 错误处理
+error_handling:
+  on_task_failure:
+    action: "retry"  # retry | skip | abort
+    max_retries: 3
+    retry_delay: 5
+    exponential_backoff: true
+
+  on_worker_failure:
+    action: "restart"  # restart | replace | abort
+    max_restarts: 3
+    restart_delay: 10
+
+  on_stage_failure:
+    action: "partial_continue"  # partial_continue | retry | abort
+    min_success_rate: 0.7  # 最小成功率
+
+  on_timeout:
+    action: "save_partial_results"  # save_partial_results | abort
+    save_state: true
+
+  on_resource_exhaustion:
+    action: "throttle"  # throttle | abort | wait
+    throttle_factor: 0.5  # 节流因子
+
+# 性能优化
+optimization:
+  # 缓存配置
+  caching:
+    enabled: true
+    strategy: "lru"  # lru | lfu | fifo
+    max_size_mb: 1024
+    ttl_seconds: 3600
+
+  # 批处理
+  batching:
+    enabled: true
+    batch_size: 10
+    batch_timeout: 30  # 批处理超时（秒）
+
+  # 预取
+  prefetching:
+    enabled: true
+    prefetch_count: 5
+    prefetch_threshold: 0.3  # 预取阈值
+
+  # 压缩
+  compression:
+    enabled: true
+    algorithm: "gzip"  # gzip | lz4 | zstd
+    level: 6  # 压缩级别
+
+# 通知配置
+notifications:
+  on_start: true
+  on_complete: true
+  on_error: true
+  on_worker_failure: true
+  on_resource_warning: true
+  on_performance_degradation: true
+  channels:
+    - "console"
+    - "log"
+
+# 状态同步
+sync:
+  before_execution: true
+  after_execution: true
+  on_stage_complete: true
+  on_batch_complete: false
+  direction: "bidirectional"
+
+# 记忆管理
+memory:
+  save_context: true
+  save_decisions: true
+  save_task_results: true  # 保存任务结果
+  save_performance_metrics: true  # 保存性能指标
+  ttl_hours: 24
+
+# 知识图谱
+knowledge_graph:
+  auto_update: true
+  link_decisions: true
+  link_patterns: true
+  link_parallel_tasks: true  # 关联并行任务
+  link_performance_data: true  # 关联性能数据
+
+# 性能监控
+monitoring:
+  enabled: true
+  real_time: true  # 实时监控
+
+  # 监控指标
+  metrics:
+    - "task_throughput"  # 任务吞吐量
+    - "task_latency"  # 任务延迟
+    - "worker_utilization"  # Worker 利用率
+    - "queue_depth"  # 队列深度
+    - "cpu_usage"  # CPU 使用率
+    - "memory_usage"  # 内存使用率
+    - "disk_io"  # 磁盘 I/O
+    - "network_io"  # 网络 I/O
+
+  # 告警阈值
+  alert_thresholds:
+    task_throughput_min: 10  # 最小任务吞吐量（任务/分钟）
+    task_latency_max: 60  # 最大任务延迟（秒）
+    worker_utilization_max: 0.9  # 最大 Worker 利用率
+    queue_depth_max: 50  # 最大队列深度
+    cpu_usage_max: 0.8  # 最大 CPU 使用率
+    memory_usage_max: 0.8  # 最大内存使用率
+
+  # 性能分析
+  profiling:
+    enabled: true
+    sample_rate: 0.1  # 采样率
+    output_path: ".agent/logs/profiling/"
+
+# 日志配置
+logging:
+  level: "INFO"
+  file: ".agent/logs/ultrawork.log"
+  max_size: "100MB"
+  retention_days: 30
+  structured: true
+  include_task_id: true  # 包含任务 ID
+  include_worker_id: true  # 包含 Worker ID
+  include_performance_metrics: true  # 包含性能指标
+
+# Ralph 集成
+ralph:
+  enabled: false  # 是否启用 Ralph 持久化循环
+  checkpoint_interval: 10  # 检查点间隔（分钟）
+  max_iterations: 100  # 最大迭代次数
+
+# Team 集成
+team:
+  enabled: false  # 是否启用 Team 协作
+  team_size: 5  # Team 大小
+  coordination: "distributed"  # 分布式协调

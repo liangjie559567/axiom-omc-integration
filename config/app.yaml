@@ -1,0 +1,30 @@
+# 应用程序配置
+
+app:
+  name: axiom-omc-superpowers-integration
+  version: 1.0.0
+  environment: development
+
+# 日志配置
+logging:
+  level: info
+  format: json
+  output: console
+
+# 记忆系统配置
+memory:
+  enabled: true
+  maxConversations: 1000
+  maxContextSize: 10000
+  vectorDimension: 768
+
+# Agent 系统配置
+agents:
+  enabled: true
+  maxConcurrent: 5
+  timeout: 30000
+
+# 命令系统配置
+commands:
+  enabled: true
+  prefix: /
