@@ -1,0 +1,64 @@
+# Test files
+tests/
+*.test.js
+*.spec.js
+coverage/
+.nyc_output/
+
+# Documentation (keep only essential docs)
+docs/
+.claude/
+*.md
+!README.md
+!LICENSE
+!CHANGELOG.md
+
+# Development files
+.github/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build and temp files
+.DS_Store
+Thumbs.db
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Configuration files
+.eslintrc.json
+.prettierrc.json
+jest.config.js
+.gitignore
+.npmignore
+
+# Scripts
+scripts/
+
+# Example and template files
+*.example
+*.template
+
+# State directories
+.omc/
+.agent/
+tmp/
+temp/
+
+# Environment files
+.env
+.env.*
+.mcp.json
+
+# Workflows and configs
+workflows/
+config/
+skills/
+commands/
+
+# Installation scripts
+install.sh
+install.ps1
