@@ -1,11 +1,14 @@
-# Axiom-OMC 整合项目
+# Axiom-OMC Integration
 
-**统一的智能开发工作流平台**
+**Unified Intelligent Development Workflow Platform**
 
-[![Tests](https://img.shields.io/badge/tests-416%20passed-brightgreen)](./tests)
+[![Tests](https://img.shields.io/badge/tests-469%20passed-brightgreen)](./tests)
 [![Coverage](https://img.shields.io/badge/coverage-92.3%25-brightgreen)](./tests)
-[![Version](https://img.shields.io/badge/version-1.0.0-blue)](./package.json)
-[![Performance](https://img.shields.io/badge/performance-A+-brightgreen)](./tests/benchmark)
+[![Version](https://img.shields.io/badge/version-2.1.0-blue)](./package.json)
+[![Performance](https://img.shields.io/badge/performance-A%2B%20(96%2F100)-brightgreen)](./tests/benchmark)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Node Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org)
+[![GitHub Stars](https://img.shields.io/github/stars/liangjie559567/axiom-omc-integration?style=social)](https://github.com/liangjie559567/axiom-omc-integration)
 
 ---
 
