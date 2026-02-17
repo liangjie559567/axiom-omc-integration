@@ -1,6 +1,5 @@
 {
-  "id": "axiom-omc",
-  "name": "axiom-omc-integration",
+  "name": "axiom-omc",
   "description": "Unified intelligent development workflow platform - Integration of Axiom, OMC and Superpowers with 32 professional agents, CLI system, and Claude Code plugin support",
   "version": "3.0.0",
   "author": {
