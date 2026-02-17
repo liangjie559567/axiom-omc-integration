@@ -2,13 +2,13 @@
   "id": "axiom-omc",
   "name": "axiom-omc-integration",
   "description": "Unified intelligent development workflow platform - Integration of Axiom, OMC and Superpowers with 32 professional agents, CLI system, and Claude Code plugin support",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "author": {
     "name": "CGTall AutoPipeline Team",
     "email": "team@cgtall.com"
   },
-  "homepage": "https://github.com/cgtall/axiom-omc-integration",
-  "repository": "https://github.com/cgtall/axiom-omc-integration",
+  "homepage": "https://github.com/liangjie559567/axiom-omc-integration",
+  "repository": "https://github.com/liangjie559567/axiom-omc-integration",
   "license": "MIT",
   "keywords": [
     "axiom",
