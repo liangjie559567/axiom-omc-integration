@@ -58,6 +58,15 @@
 npm install axiom-omc-integration
 ```
 
+## 📚 文档
+
+完整的插件使用文档请查看：
+
+- **[插件文档中心](./docs/README.md)** - 插件使用完整指南
+- **[插件使用指南](./docs/PLUGIN-GUIDE.md)** - 详细使用说明
+- **[技能系统](./docs/SKILLS.md)** - 7个核心技能文档
+- **[代理系统](./docs/AGENTS.md)** - 32个专业代理文档
+
 ## 🚀 快速开始
 
 ### v3.0 核心集成（推荐）
