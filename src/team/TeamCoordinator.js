@@ -7,8 +7,8 @@ class TeamCoordinator {
   }
 
   addAgent(agentName) {
-    const agent = this.router.getAgent(agentName);
-    if (agent) this.team.push(agent);
+    const agent = { name: agentName };
+    this.team.push(agent);
     return agent;
   }
 
