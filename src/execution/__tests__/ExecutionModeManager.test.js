@@ -7,22 +7,16 @@ describe('ExecutionModeManager', () => {
     manager = new ExecutionModeManager();
   });
 
-  test('应正确启动模式', () => {
-    const result = manager.startMode('autopilot');
-    expect(result.started).toBe(true);
-    expect(result.mode).toBe('autopilot');
+  test('应注册和启动模式', () => {
+    manager.registerMode('autopilot', (cfg) => cfg.value);
+    expect(manager.startMode('autopilot', { value: 'test' })).toBe('test');
     expect(manager.getActiveMode()).toBe('autopilot');
   });
 
-  test('应拒绝无效模式', () => {
-    const result = manager.startMode('invalid');
-    expect(result.started).toBe(false);
-  });
-
-  test('应正确切换模式', () => {
-    manager.startMode('autopilot');
-    const switched = manager.switchMode('ralph');
-    expect(switched).toBe(true);
-    expect(manager.getActiveMode()).toBe('ralph');
+  test('应停止模式', () => {
+    manager.registerMode('autopilot', () => {});
+    manager.startMode('autopilot', {});
+    manager.stopMode();
+    expect(manager.getActiveMode()).toBeNull();
   });
 });

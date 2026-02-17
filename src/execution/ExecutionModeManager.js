@@ -1,27 +1,26 @@
 class ExecutionModeManager {
   constructor() {
-    this.modes = ['autopilot', 'ultrawork', 'ralph', 'pipeline'];
+    this.modes = new Map();
     this.activeMode = null;
   }
 
-  startMode(mode) {
-    if (this.modes.includes(mode)) {
-      this.activeMode = mode;
-      return { started: true, mode };
-    }
-    return { started: false };
+  registerMode(name, handler) {
+    this.modes.set(name, handler);
   }
 
-  switchMode(toMode) {
-    if (this.modes.includes(toMode)) {
-      this.activeMode = toMode;
-      return true;
-    }
-    return false;
+  startMode(name, config) {
+    const handler = this.modes.get(name);
+    if (!handler) return null;
+    this.activeMode = name;
+    return handler(config);
   }
 
   getActiveMode() {
     return this.activeMode;
+  }
+
+  stopMode() {
+    this.activeMode = null;
   }
 }
 
