@@ -1,0 +1,50 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[HookSystem] Session started at $(date)'",
+            "async": false
+          }
+        ]
+      }
+    ],
+    "WorkflowStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[HookSystem] Workflow started: ${WORKFLOW_NAME}'",
+            "async": false
+          }
+        ]
+      }
+    ],
+    "WorkflowEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[HookSystem] Workflow completed: ${WORKFLOW_NAME}'",
+            "async": false
+          }
+        ]
+      }
+    ],
+    "CommandExecute": [
+      {
+        "matcher": "commit|push",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[HookSystem] Git command executed: ${COMMAND_NAME}'",
+            "async": true
+          }
+        ]
+      }
+    ]
+  }
+}

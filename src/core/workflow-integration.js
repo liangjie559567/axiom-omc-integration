@@ -6,6 +6,7 @@
 import { EventEmitter } from 'events';
 import { Logger } from './logger.js';
 import { generateId } from '../utils/index.js';
+import { hookSystem } from './HookSystem.js';
 
 const logger = new Logger('WorkflowIntegration');
 
@@ -160,6 +161,17 @@ export class WorkflowIntegration extends EventEmitter {
     logger.info(`工作流已启动: ${instanceId}`, {
       workflow: workflow.name,
       initialPhase: instance.currentPhase
+    });
+
+    // 触发 WorkflowStart 钩子
+    hookSystem.executeHooks('WorkflowStart', {
+      instanceId,
+      workflowId,
+      workflowName: workflow.name,
+      WORKFLOW_NAME: workflow.name,
+      initialPhase: instance.currentPhase
+    }).catch(error => {
+      logger.error(`WorkflowStart 钩子执行失败: ${error.message}`);
     });
 
     this.emit('workflowStarted', instance);
@@ -324,6 +336,8 @@ export class WorkflowIntegration extends EventEmitter {
       throw new Error(`工作流实例不存在: ${instanceId}`);
     }
 
+    const workflow = this.workflows.get(instance.workflowId);
+
     instance.completedAt = Date.now();
     instance.phaseStatuses[instance.currentPhase] = PhaseStatus.COMPLETED;
 
@@ -332,6 +346,17 @@ export class WorkflowIntegration extends EventEmitter {
     this.stats.completedWorkflows++;
 
     logger.info(`工作流已完成: ${instanceId}`);
+
+    // 触发 WorkflowEnd 钩子
+    hookSystem.executeHooks('WorkflowEnd', {
+      instanceId,
+      workflowId: instance.workflowId,
+      workflowName: workflow ? workflow.name : 'Unknown',
+      WORKFLOW_NAME: workflow ? workflow.name : 'Unknown',
+      duration: instance.completedAt - instance.startedAt
+    }).catch(error => {
+      logger.error(`WorkflowEnd 钩子执行失败: ${error.message}`);
+    });
 
     this.emit('workflowCompleted', instance);
 
