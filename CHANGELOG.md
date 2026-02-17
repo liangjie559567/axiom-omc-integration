@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.0.2] - 2026-02-18
+
+### ✨ Added - Brainstorming 工作流引导
+
+#### 智能工作流推荐
+- 需求澄清完成后自动推荐合适的工作流
+- 基于任务复杂度的智能评估（简单/中等/复杂）
+- 工作流决策树（直接实现/writing-plans/autopilot/ralph/team）
+
+#### 用户交互选项
+- 选项 A：自动执行推荐工作流
+- 选项 B：选择其他工作流（7种可选）
+- 选项 C：先规划再执行
+
+#### 用户回复处理
+- 识别"开始"/"执行"触发自动执行
+- 识别工作流名称触发指定工作流
+- 识别"先规划"触发规划流程
+- 决策记录到 operations-log.md
+
+### 🔧 Changed
+- 增强 `skills/brainstorming/SKILL.md`（+217行）
+- 添加工作流引导模板和处理指令
+
+---
+
 ## [3.0.1] - 2026-02-17
 
 ### ✨ Added - CLI 用户体验优化
