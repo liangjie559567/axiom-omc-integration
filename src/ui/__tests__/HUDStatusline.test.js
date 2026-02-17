@@ -7,14 +7,20 @@ describe('HUDStatusline', () => {
     hud = new HUDStatusline();
   });
 
-  test('应更新状态', () => {
-    hud.update({ active: true, progress: 50 });
-    expect(hud.getStatus().progress).toBe(50);
+  test('应更新和获取状态', () => {
+    hud.update('progress', 50);
+    expect(hud.get('progress')).toBe(50);
   });
 
-  test('应重置状态', () => {
-    hud.update({ active: true });
-    hud.reset();
-    expect(hud.getStatus().active).toBe(false);
+  test('应获取所有状态', () => {
+    hud.update('progress', 50);
+    hud.update('stage', 'exec');
+    expect(hud.getAll()).toEqual({ progress: 50, stage: 'exec' });
+  });
+
+  test('应清空状态', () => {
+    hud.update('progress', 50);
+    hud.clear();
+    expect(hud.getAll()).toEqual({});
   });
 });

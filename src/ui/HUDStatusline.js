@@ -1,18 +1,22 @@
 class HUDStatusline {
   constructor() {
-    this.status = { active: false, progress: 0 };
+    this.status = {};
   }
 
-  update(data) {
-    this.status = { ...this.status, ...data, timestamp: Date.now() };
+  update(key, value) {
+    this.status[key] = value;
   }
 
-  getStatus() {
-    return this.status;
+  get(key) {
+    return this.status[key];
   }
 
-  reset() {
-    this.status = { active: false, progress: 0 };
+  getAll() {
+    return { ...this.status };
+  }
+
+  clear() {
+    this.status = {};
   }
 }
 
