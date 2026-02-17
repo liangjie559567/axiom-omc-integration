@@ -23,8 +23,10 @@ export class AutoSyncEngine extends EventEmitter {
    * 构造函数
    * @param {Object} workflowIntegration - 工作流集成实例
    * @param {Object} phaseMapper - 阶段映射器实例
+   * @param {Object} options - 配置选项
+   * @param {number} options.maxHistorySize - 最大历史记录数（默认 1000）
    */
-  constructor(workflowIntegration, phaseMapper) {
+  constructor(workflowIntegration, phaseMapper, options = {}) {
     super();
 
     if (!workflowIntegration) {
@@ -39,7 +41,9 @@ export class AutoSyncEngine extends EventEmitter {
     this.phaseMapper = phaseMapper;
     this.syncStrategy = 'master-slave'; // MVP: 只支持主从模式
     this.syncLinks = new Map(); // 工作流同步关系: sourceId -> [{ targetId, ... }]
-    this.syncHistory = []; // 同步历史记录
+    this.syncHistory = []; // 同步历史记录（循环缓冲区）
+    this.syncHistoryByInstance = new Map(); // 按实例 ID 索引的历史记录
+    this.maxHistorySize = options.maxHistorySize || 1000; // 可配置的历史记录限制
     this.isRunning = false;
     this.syncInProgress = new Set(); // 正在同步的实例 ID（用于循环检测）
 
@@ -54,7 +58,8 @@ export class AutoSyncEngine extends EventEmitter {
     };
 
     logger.info('AutoSyncEngine 已初始化', {
-      strategy: this.syncStrategy
+      strategy: this.syncStrategy,
+      maxHistorySize: this.maxHistorySize
     });
   }
 
@@ -334,16 +339,23 @@ export class AutoSyncEngine extends EventEmitter {
    * @param {number} filters.limit - 限制数量（可选）
    * @returns {Array<Object>} - 同步历史记录
    */
+  /**
+   * 获取同步历史（优化版：使用索引）
+   * @param {Object} filters - 过滤条件
+   * @param {string} filters.instanceId - 实例 ID
+   * @param {boolean} filters.success - 成功状态
+   * @param {number} filters.limit - 限制数量
+   * @returns {Array<Object>} - 历史记录列表
+   */
   getSyncHistory(filters = {}) {
-    let history = [...this.syncHistory];
+    let history;
 
-    // 按实例过滤
+    // 优化：如果按实例过滤，使用索引快速查找
     if (filters.instanceId) {
-      history = history.filter(
-        h =>
-          h.sourceInstanceId === filters.instanceId ||
-          h.targetInstanceId === filters.instanceId
-      );
+      const instanceHistory = this.syncHistoryByInstance.get(filters.instanceId) || [];
+      history = [...instanceHistory];
+    } else {
+      history = [...this.syncHistory];
     }
 
     // 按成功状态过滤
@@ -414,16 +426,78 @@ export class AutoSyncEngine extends EventEmitter {
   }
 
   /**
-   * 记录同步历史
+   * 记录同步历史（优化版：维护索引）
    * @private
    * @param {Object} record - 同步记录
    */
   _recordSync(record) {
+    // 添加到全局历史
     this.syncHistory.push(record);
 
-    // 保持历史记录在限制内（最多 1000 条）
-    if (this.syncHistory.length > 1000) {
-      this.syncHistory.shift();
+    // 维护索引：按实例 ID
+    const sourceId = record.sourceInstanceId;
+    const targetId = record.targetInstanceId;
+
+    // 为源实例添加记录
+    if (!this.syncHistoryByInstance.has(sourceId)) {
+      this.syncHistoryByInstance.set(sourceId, []);
+    }
+    this.syncHistoryByInstance.get(sourceId).push(record);
+
+    // 为目标实例添加记录
+    if (!this.syncHistoryByInstance.has(targetId)) {
+      this.syncHistoryByInstance.set(targetId, []);
+    }
+    this.syncHistoryByInstance.get(targetId).push(record);
+
+    // 保持历史记录在限制内（使用可配置的限制）
+    if (this.syncHistory.length > this.maxHistorySize) {
+      // 移除最旧的记录
+      const removed = this.syncHistory.shift();
+
+      // 从索引中移除
+      this._removeFromIndex(removed);
+    }
+
+    // 保持每个实例的历史记录在限制内
+    this._trimInstanceHistory(sourceId);
+    this._trimInstanceHistory(targetId);
+  }
+
+  /**
+   * 从索引中移除记录
+   * @private
+   * @param {Object} record - 要移除的记录
+   */
+  _removeFromIndex(record) {
+    const sourceHistory = this.syncHistoryByInstance.get(record.sourceInstanceId);
+    if (sourceHistory) {
+      const index = sourceHistory.indexOf(record);
+      if (index > -1) {
+        sourceHistory.splice(index, 1);
+      }
+    }
+
+    const targetHistory = this.syncHistoryByInstance.get(record.targetInstanceId);
+    if (targetHistory) {
+      const index = targetHistory.indexOf(record);
+      if (index > -1) {
+        targetHistory.splice(index, 1);
+      }
+    }
+  }
+
+  /**
+   * 修剪实例历史记录
+   * @private
+   * @param {string} instanceId - 实例 ID
+   */
+  _trimInstanceHistory(instanceId) {
+    const history = this.syncHistoryByInstance.get(instanceId);
+    if (history && history.length > this.maxHistorySize) {
+      // 只保留最新的记录
+      const toRemove = history.length - this.maxHistorySize;
+      history.splice(0, toRemove);
     }
   }
 
@@ -434,6 +508,7 @@ export class AutoSyncEngine extends EventEmitter {
     this.stop();
     this.syncLinks.clear();
     this.syncHistory = [];
+    this.syncHistoryByInstance.clear(); // 清理索引
     this.syncInProgress.clear();
     this.removeAllListeners();
     logger.info('AutoSyncEngine 已销毁');
