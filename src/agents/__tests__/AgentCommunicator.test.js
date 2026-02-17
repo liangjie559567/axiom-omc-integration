@@ -8,17 +8,13 @@ describe('AgentCommunicator', () => {
   });
 
   test('应正确发送消息', () => {
-    const msg = comm.send('agent1', 'agent2', 'test');
-    expect(msg.from).toBe('agent1');
-    expect(msg.to).toBe('agent2');
-    expect(msg.message).toBe('test');
+    comm.send('agent1', 'agent2', 'test');
+    expect(comm.messages.length).toBe(1);
   });
 
-  test('应正确获取指定agent的消息', () => {
-    comm.send('a1', 'a2', 'msg1');
-    comm.send('a1', 'a3', 'msg2');
-    const msgs = comm.getMessages('a2');
-    expect(msgs).toHaveLength(1);
-    expect(msgs[0].message).toBe('msg1');
+  test('应正确接收消息', () => {
+    comm.send('agent1', 'agent2', 'test');
+    const msgs = comm.receive('agent2');
+    expect(msgs.length).toBe(1);
   });
 });

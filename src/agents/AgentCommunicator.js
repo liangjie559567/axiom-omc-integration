@@ -4,17 +4,11 @@ class AgentCommunicator {
   }
 
   send(from, to, message) {
-    const msg = { from, to, message, timestamp: Date.now() };
-    this.messages.push(msg);
-    return msg;
+    this.messages.push({ from, to, message, timestamp: Date.now() });
   }
 
-  getMessages(agentId) {
+  receive(agentId) {
     return this.messages.filter(m => m.to === agentId);
-  }
-
-  clear() {
-    this.messages = [];
   }
 }
 

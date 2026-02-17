@@ -5,12 +5,19 @@ class AgentRouter {
     this.agents = agentDefinitions;
   }
 
-  route(taskType) {
-    return this.agents[taskType] || null;
+  getAgent(name) {
+    return this.agents[name];
   }
 
-  getAgent(name) {
-    return this.agents[name] || null;
+  selectAgent(taskType) {
+    const typeMap = {
+      implementation: 'executor',
+      verification: 'verifier',
+      debugging: 'debugger',
+      planning: 'planner',
+      analysis: 'analyst'
+    };
+    return this.agents[typeMap[taskType]];
   }
 
   listAgents() {
