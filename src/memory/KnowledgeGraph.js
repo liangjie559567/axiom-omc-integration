@@ -1,23 +1,31 @@
 class KnowledgeGraph {
   constructor() {
     this.nodes = new Map();
-    this.edges = [];
+    this.edges = new Map();
   }
 
   addNode(id, data) {
-    this.nodes.set(id, data);
+    this.nodes.set(id, { id, data, timestamp: Date.now() });
   }
 
-  addEdge(from, to, type) {
-    this.edges.push({ from, to, type });
+  getNode(id) {
+    return this.nodes.get(id);
   }
 
-  query(nodeId) {
-    return this.nodes.get(nodeId);
+  addEdge(from, to, relation) {
+    const key = `${from}->${to}`;
+    this.edges.set(key, { from, to, relation, timestamp: Date.now() });
   }
 
   getEdges(nodeId) {
-    return this.edges.filter(e => e.from === nodeId || e.to === nodeId);
+    return Array.from(this.edges.values()).filter(
+      e => e.from === nodeId || e.to === nodeId
+    );
+  }
+
+  clear() {
+    this.nodes.clear();
+    this.edges.clear();
   }
 }
 

@@ -7,15 +7,24 @@ describe('KnowledgeGraph', () => {
     graph = new KnowledgeGraph();
   });
 
-  test('应正确添加节点', () => {
+  test('应添加和获取节点', () => {
     graph.addNode('node1', { name: 'test' });
-    expect(graph.query('node1')).toEqual({ name: 'test' });
+    const node = graph.getNode('node1');
+    expect(node.data.name).toBe('test');
   });
 
-  test('应正确添加边', () => {
+  test('应添加和查询边', () => {
     graph.addNode('node1', {});
     graph.addNode('node2', {});
     graph.addEdge('node1', 'node2', 'relates');
-    expect(graph.getEdges('node1')).toHaveLength(1);
+    const edges = graph.getEdges('node1');
+    expect(edges.length).toBe(1);
+    expect(edges[0].relation).toBe('relates');
+  });
+
+  test('应清空图谱', () => {
+    graph.addNode('node1', {});
+    graph.clear();
+    expect(graph.getNode('node1')).toBeUndefined();
   });
 });
