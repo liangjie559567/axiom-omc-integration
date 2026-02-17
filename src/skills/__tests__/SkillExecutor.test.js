@@ -17,4 +17,9 @@ describe('SkillExecutor', () => {
     await expect(executor.execute('unknown', {}))
       .rejects.toThrow('Skill not found');
   });
+
+  test('应正确映射技能到模式', () => {
+    const mode = executor.mapToMode('brainstorming');
+    expect(mode).toBe('analyst');
+  });
 });
