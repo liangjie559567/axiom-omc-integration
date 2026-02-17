@@ -1,6 +1,6 @@
 # Axiom-OMC Integration
 
-[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/liangjie559567/axiom-omc-integration/releases)
+[![Version](https://img.shields.io/badge/version-3.0.1-blue.svg)](https://github.com/liangjie559567/axiom-omc-integration/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
 [![Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/liangjie559567/axiom-omc-integration)
@@ -12,7 +12,13 @@
 
 ## 🌟 特性
 
-### v3.0 三项目核心集成（最新）
+### v3.0.1 CLI 用户体验优化（最新）
+- **增强日志** - 时间戳、级别标识、进度条、实时反馈
+- **交互式功能** - 确认提示、选项选择
+- **环境变量控制** - NO_CONFIRM、DEBUG
+- **完整文档** - 用户指南 + 演示脚本
+
+### v3.0 三项目核心集成
 - **内存系统** - UnifiedMemoryManager + KnowledgeGraph
 - **32个专业Agent** - 完整的Agent路由和通信协议
 - **团队协调** - TeamCoordinator + TaskQueue
@@ -64,12 +70,28 @@ npm install axiom-omc-integration
 
 - **[插件文档中心](./docs/README.md)** - 插件使用完整指南
 - **[插件使用指南](./docs/PLUGIN-GUIDE.md)** - 详细使用说明
+- **[CLI 用户体验指南](./docs/CLI-UX-GUIDE.md)** - CLI 优化功能
 - **[技能系统](./docs/SKILLS.md)** - 7个核心技能文档
 - **[代理系统](./docs/AGENTS.md)** - 32个专业代理文档
 
 ## 🚀 快速开始
 
-### v3.0 核心集成（推荐）
+### v3.0.1 CLI 用户体验（最新）
+
+```javascript
+import { Logger } from 'axiom-omc-integration/core';
+import { Interactive } from 'axiom-omc-integration/core';
+
+// 增强的日志
+const logger = new Logger('MyApp', { showTimestamp: true });
+logger.progress('处理任务', 50, 100);
+logger.action('executor', '执行代码', 'running');
+
+// 交互式确认
+const confirmed = await Interactive.confirm('确认执行?');
+```
+
+### v3.0 核心集成
 
 ```javascript
 import { UnifiedMemoryManager, KnowledgeGraph } from 'axiom-omc-integration/memory';
