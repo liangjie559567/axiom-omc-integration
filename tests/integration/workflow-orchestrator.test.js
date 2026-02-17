@@ -18,7 +18,8 @@ class MockWorkflowIntegration extends EventEmitter {
   async startWorkflow(workflowId, context = {}) {
     const instanceId = `instance-${++this.instanceCounter}`;
     const instance = {
-      instanceId,
+      id: instanceId,
+      instanceId: instanceId,
       workflowId,
       currentPhase: 'initial',
       context,
@@ -26,7 +27,7 @@ class MockWorkflowIntegration extends EventEmitter {
     };
 
     this.instances.set(instanceId, instance);
-    return instance;
+    return instanceId;
   }
 
   async transitionToNext(instanceId) {
