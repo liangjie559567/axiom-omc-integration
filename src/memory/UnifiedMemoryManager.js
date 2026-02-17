@@ -1,23 +1,28 @@
 class UnifiedMemoryManager {
   constructor() {
-    this.memories = new Map();
+    this.contexts = new Map();
+    this.knowledge = new Map();
   }
 
-  store(key, value) {
-    this.memories.set(key, { value, timestamp: Date.now() });
-    return true;
+  saveContext(agentId, context) {
+    this.contexts.set(agentId, { ...context, timestamp: Date.now() });
   }
 
-  retrieve(key) {
-    return this.memories.get(key)?.value;
+  loadContext(agentId) {
+    return this.contexts.get(agentId);
+  }
+
+  addKnowledge(key, value) {
+    this.knowledge.set(key, { value, timestamp: Date.now() });
+  }
+
+  queryKnowledge(key) {
+    return this.knowledge.get(key);
   }
 
   clear() {
-    this.memories.clear();
-  }
-
-  list() {
-    return Array.from(this.memories.keys());
+    this.contexts.clear();
+    this.knowledge.clear();
   }
 }
 
