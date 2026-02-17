@@ -1,10 +1,10 @@
 # Axiom-OMC Integration
 
-[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](https://github.com/liangjie559567/axiom-omc-integration/releases)
+[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/liangjie559567/axiom-omc-integration/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
-[![Test Coverage](https://img.shields.io/badge/coverage-95%2B%25-brightgreen)](https://github.com/liangjie559567/axiom-omc-integration)
-[![Tests](https://img.shields.io/badge/tests-22%20passed-brightgreen)](https://github.com/liangjie559567/axiom-omc-integration)
+[![Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/liangjie559567/axiom-omc-integration)
+[![Tests](https://img.shields.io/badge/tests-25%20passed-brightgreen)](https://github.com/liangjie559567/axiom-omc-integration)
 [![Architecture](https://img.shields.io/badge/architecture-event--sourcing%20%2B%20CQRS-blue)](https://github.com/liangjie559567/axiom-omc-integration)
 [![Status](https://img.shields.io/badge/status-production%20ready-success)](https://github.com/liangjie559567/axiom-omc-integration)
 
@@ -12,7 +12,15 @@
 
 ## 🌟 特性
 
-### v2.1 Superpowers 集成（最新）
+### v3.0 三项目核心集成（最新）
+- **内存系统** - UnifiedMemoryManager + KnowledgeGraph
+- **32个专业Agent** - 完整的Agent路由和通信协议
+- **团队协调** - TeamCoordinator + TaskQueue
+- **技能系统** - SkillRegistry + SkillExecutor
+- **执行模式** - Autopilot + Ralph持久化循环
+- **100%测试覆盖** - 25个测试全部通过
+
+### v2.1 Superpowers 集成
 - **插件系统** - 完整的 Claude Code 插件配置
 - **Markdown 命令** - 支持 Markdown 格式命令定义
 - **统一钩子** - JSON 配置的钩子系统
@@ -40,7 +48,27 @@ npm install axiom-omc-integration
 
 ## 🚀 快速开始
 
-### v2 架构（推荐）
+### v3.0 核心集成（推荐）
+
+```javascript
+import { UnifiedMemoryManager, KnowledgeGraph } from 'axiom-omc-integration/memory';
+import { AgentRouter, TeamCoordinator } from 'axiom-omc-integration/agents';
+import { SkillExecutor, AutopilotMode } from 'axiom-omc-integration/core';
+
+// 初始化内存系统
+const memory = new UnifiedMemoryManager();
+const graph = new KnowledgeGraph();
+
+// 初始化Agent系统
+const router = new AgentRouter();
+const team = new TeamCoordinator();
+
+// 执行任务
+const mode = new AutopilotMode();
+await mode.execute(task);
+```
+
+### v2 架构
 
 ```javascript
 import { EventStore, EventBus } from 'axiom-omc-integration/core';
