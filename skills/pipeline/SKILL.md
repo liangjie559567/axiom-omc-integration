@@ -23,8 +23,32 @@ Pipeline 实现顺序链式执行，每个阶段的输出作为下一阶段的�
 
 ## 执行逻辑
 
+### 顺序执行流程
+```javascript
+let currentInput = initialInput;
+
+for (const stage of stages) {
+  const result = Task({
+    subagent_type: stage.agent,
+    model: stage.model || "sonnet",
+    prompt: `${stage.description}\n输入：${currentInput}`
+  });
+
+  currentInput = result; // 输出作为下一阶段输入
+  state.outputs[stage.name] = result;
+  state_write(mode="pipeline", state);
+}
 ```
-输入 → 代理1 → 输出1 → 代理2 → 输出2 → ... → 最终输出
+
+### 使用示例
+```javascript
+// 定义执行链
+const stages = [
+  { name: "analyze", agent: "analyst", description: "分析需求" },
+  { name: "design", agent: "architect", description: "设计方案" },
+  { name: "implement", agent: "executor", description: "实现代码" },
+  { name: "test", agent: "test-engineer", description: "测试验证" }
+];
 ```
 
 ## 状态结构

@@ -48,17 +48,43 @@ while (未完成) {
 
 ## 执行指令
 
-### 步骤 1: 初始化
-- 读取或创建状态
-- 设置 iteration = 0
+当用户调用 `/oh-my-claudecode:ralph "任务"` 时：
 
-### 步骤 2: 执行循环
-- 调用 ultrawork 或 team 执行任务
-- iteration++
-- 验证结果
+### 核心循环逻辑
+```javascript
+while (state.active && state.iteration < state.max_iterations) {
+  // 1. 执行任务（使用 ultrawork 或 team）
+  const result = Task({
+    subagent_type: state.linked_team ? "oh-my-claudecode:team" : "oh-my-claudecode:ultrawork",
+    prompt: state.task_description
+  });
 
-### 步骤 3: 判断继续
-- 如果成功：标记 complete
-- 如果失败且 iteration < max：继续循环
-- 如果超过 max：标记 failed
+  // 2. 验证结果
+  const verified = Task({
+    subagent_type: "oh-my-claudecode:verifier",
+    prompt: `验证任务完成度：${result}`
+  });
+
+  // 3. 更新状态
+  state.iteration++;
+  state.last_result = result;
+
+  if (verified.passed) {
+    state.active = false;
+    state.status = "complete";
+  } else if (state.iteration >= state.max_iterations) {
+    state.active = false;
+    state.status = "failed";
+  }
+
+  state_write(mode="ralph", state);
+}
+```
+
+### 与 Team 联动
+```javascript
+// 如果用户调用 /ralph team "任务"
+state.linked_team = true;
+state.linked_team_name = "ralph-team-" + timestamp;
+```
 

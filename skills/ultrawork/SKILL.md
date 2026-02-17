@@ -23,10 +23,36 @@ Ultrawork 通过并行调度多个代理实现最大化执行效率。
 
 ## 执行逻辑
 
-1. 分析任务，识别独立子任务
-2. 并行调用多个 Task 代理
-3. 收集所有结果
-4. 整合输出
+### 步骤 1: 任务分解
+```javascript
+const subtasks = Task({
+  subagent_type: "oh-my-claudecode:planner",
+  model: "haiku",
+  prompt: `分解为独立并行子任务：${task_description}`
+});
+```
+
+### 步骤 2: 并行执行
+```javascript
+const results = await Promise.all(
+  subtasks.map(subtask =>
+    Task({
+      subagent_type: "oh-my-claudecode:executor",
+      model: "sonnet",
+      prompt: subtask,
+      run_in_background: true
+    })
+  )
+);
+```
+
+### 步骤 3: 结果整合
+```javascript
+const integrated = Task({
+  subagent_type: "oh-my-claudecode:verifier",
+  prompt: `整合并验证结果：${results}`
+});
+```
 
 ## 状态结构
 
