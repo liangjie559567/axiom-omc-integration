@@ -22,7 +22,8 @@ export class PhaseMapper {
    * 构造函数
    */
   constructor() {
-    this.mappingRules = new Map();  // 映射规则存储
+    this.mappingRules = new Map();  // 映射规则存储: ruleId -> rule
+    this.rulesByFromPhase = new Map(); // 按源阶段索引: fromPhase -> [ruleIds]
     this.customMappers = new Map(); // 自定义映射函数
     this.stats = {
       totalRules: 0,
@@ -61,6 +62,13 @@ export class PhaseMapper {
     };
 
     this.mappingRules.set(id, ruleData);
+
+    // 更新索引：按 from 阶段分组
+    if (!this.rulesByFromPhase.has(rule.from)) {
+      this.rulesByFromPhase.set(rule.from, []);
+    }
+    this.rulesByFromPhase.get(rule.from).push(id);
+
     this.stats.totalRules++;
 
     logger.info(`映射规则已注册: ${id}`, {
@@ -240,20 +248,47 @@ export class PhaseMapper {
    * @returns {boolean} - 是否成功
    */
   deleteRule(ruleId) {
+    const rule = this.mappingRules.get(ruleId);
+
+    if (!rule) {
+      return false;
+    }
+
+    // 从主存储中删除
     const deleted = this.mappingRules.delete(ruleId);
+
     if (deleted) {
+      // 从索引中删除
+      const ruleIds = this.rulesByFromPhase.get(rule.from);
+      if (ruleIds) {
+        const index = ruleIds.indexOf(ruleId);
+        if (index > -1) {
+          ruleIds.splice(index, 1);
+        }
+
+        // 如果该阶段没有规则了，删除索引条目
+        if (ruleIds.length === 0) {
+          this.rulesByFromPhase.delete(rule.from);
+        }
+      }
+
       this.stats.totalRules--;
       logger.info(`映射规则已删除: ${ruleId}`);
     }
+
     return deleted;
   }
 
   /**
    * 清空所有规则
    */
+  /**
+   * 清空所有映射规则
+   */
   clearRules() {
     const count = this.mappingRules.size;
     this.mappingRules.clear();
+    this.rulesByFromPhase.clear(); // 清空索引
     this.stats.totalRules = 0;
     logger.info(`已清空所有映射规则: ${count} 条`);
   }
@@ -313,9 +348,24 @@ export class PhaseMapper {
    * @param {string} fromPhase - 源阶段
    * @returns {Array<Object>} - 匹配的规则列表
    */
+  /**
+   * 查找匹配的规则（优化版：使用索引）
+   * @param {string} fromPhase - 源阶段
+   * @returns {Array<Object>} - 匹配的规则列表
+   * @private
+   */
   _findMatchingRules(fromPhase) {
-    return Array.from(this.mappingRules.values())
-      .filter(rule => rule.from === fromPhase);
+    // 使用索引快速查找：O(1) 而不是 O(n)
+    const ruleIds = this.rulesByFromPhase.get(fromPhase);
+
+    if (!ruleIds || ruleIds.length === 0) {
+      return [];
+    }
+
+    // 根据 ID 获取规则对象
+    return ruleIds
+      .map(id => this.mappingRules.get(id))
+      .filter(rule => rule !== undefined);
   }
 }
 
