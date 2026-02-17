@@ -763,7 +763,7 @@ verification-before-completion (验证完成)
 
 **第二步：调用 AskUserQuestion 工具**
 
-必须调用 AskUserQuestion 工具，提供以下选项：
+必须调用 AskUserQuestion 工具，提供以下选项（最多4个）：
 
 ```
 问题: "请选择执行方式："
@@ -771,12 +771,13 @@ header: "工作流选择"
 选项:
 1. label: "使用推荐工作流（推荐）", description: "立即使用 [推荐的工作流名称] 开始执行"
 2. label: "autopilot", description: "全自动执行，从想法到代码"
-3. label: "ralph", description: "持久化循环，不停止直到完成"
-4. label: "team", description: "多代理协调，适合复杂任务"
-5. label: "writing-plans", description: "先规划再执行"
+3. label: "team", description: "多代理协调，适合复杂任务"
+4. label: "ralph", description: "持久化循环，不停止直到完成"
 ```
 
-**注意**：如果推荐的是"直接实现"，则第一个选项改为 "直接实现（推荐）"
+**注意**：
+- AskUserQuestion 最多支持4个选项
+- 如果推荐的是"直接实现"，则第一个选项改为 "直接实现（推荐）"
 
 #### 步骤 4：处理用户选择并执行
 
