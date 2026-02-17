@@ -71,6 +71,9 @@ This project adheres to a code of conduct. By participating, you are expected to
 
 - 🐛 **Bug fixes** - Fix issues and improve stability
 - ✨ **New features** - Add new agents, commands, or functionality
+- 🎯 **Skills** - Create new Superpowers skills
+- 🪝 **Hooks** - Add new hook integrations
+- ⚡ **Commands** - Develop new commands
 - 📚 **Documentation** - Improve docs, add examples, fix typos
 - 🧪 **Tests** - Add or improve test coverage
 - ⚡ **Performance** - Optimize code for better performance
@@ -84,6 +87,178 @@ This project adheres to a code of conduct. By participating, you are expected to
 4. **Start coding** - Once approved, start working on your branch
 5. **Write tests** - Ensure your changes are well-tested
 6. **Submit PR** - Create a pull request with clear description
+
+---
+
+## 🎯 Contributing to Superpowers Integration
+
+### Creating New Skills
+
+Skills are workflow guides that help developers follow best practices.
+
+**Location**: `skills/your-skill-name/`
+
+**Structure**:
+```
+skills/your-skill-name/
+├── skill.md          # Skill content (required)
+└── README.md         # Skill description (optional)
+```
+
+**Template**:
+```markdown
+# Your Skill Name
+
+Brief description of what this skill helps with.
+
+## When to Use
+
+- Situation 1
+- Situation 2
+
+## Workflow
+
+### Phase 1: Preparation
+
+Steps for preparation...
+
+### Phase 2: Execution
+
+Steps for execution...
+
+### Phase 3: Verification
+
+Steps for verification...
+
+## Best Practices
+
+- Practice 1
+- Practice 2
+
+## Common Pitfalls
+
+- Pitfall 1 and how to avoid it
+- Pitfall 2 and how to avoid it
+```
+
+**Example**: See `skills/brainstorming/skill.md`
+
+### Creating New Commands
+
+Commands extend the command system with new functionality.
+
+**Location**: `commands/group-name/command-name.js`
+
+**Template**:
+```javascript
+/**
+ * command-name 命令 - Brief description
+ */
+
+export default {
+  name: 'command-name',
+  description: 'Command description',
+  aliases: ['alias1', 'alias2'],
+  group: 'group-name',
+  options: {
+    usage: 'command-name [options]',
+    examples: [
+      'command-name',
+      'command-name --flag'
+    ]
+  },
+
+  async execute(parsed, context) {
+    // Access parsed arguments
+    const arg = parsed.args[0];
+    const flag = parsed.flags.flag;
+
+    // Access context
+    const { commandSystem, hookSystem } = context;
+
+    // Implement command logic
+    try {
+      // Your logic here
+      return 'Success message';
+    } catch (error) {
+      return `Error: ${error.message}`;
+    }
+  }
+};
+```
+
+**Testing**:
+```javascript
+// Add to test-commands.js
+console.log('测试: 执行 command-name');
+const result = await commandSystem.executeCommand('command-name arg1 --flag');
+console.log(result.success ? '✅ 成功' : '❌ 失败');
+```
+
+**Example**: See `commands/core/help.js`
+
+### Adding New Hooks
+
+Hooks enable event-driven automation.
+
+**Configuration**: `hooks/hooks.json`
+
+**Command Hook Template**:
+```json
+{
+  "event": "YourEvent",
+  "type": "command",
+  "command": "echo 'Event triggered: ${eventData}'",
+  "async": true,
+  "condition": {
+    "type": "regex",
+    "pattern": "pattern-to-match"
+  }
+}
+```
+
+**Function Hook Template**:
+```javascript
+import { hookSystem } from './src/core/HookSystem.js';
+
+hookSystem.registerFunctionHook('YourEvent', async (context) => {
+  // Access context data
+  const { event, data } = context;
+
+  // Implement hook logic
+  console.log(`Event: ${event}`);
+
+  // Perform actions
+  await doSomething(data);
+});
+```
+
+**Triggering Hooks**:
+```javascript
+// In your code
+await hookSystem.executeHooks('YourEvent', {
+  data: { key: 'value' }
+});
+```
+
+**Example**: See `hooks/hooks.json` and `test-hooks.js`
+
+### Priority Areas
+
+**High Priority**:
+1. New commands (`config`, `plugin`, `agent`)
+2. Documentation improvements
+3. More hook integration points
+
+**Medium Priority**:
+4. New skills for specific workflows
+5. Command system enhancements
+6. Performance optimizations
+
+**Low Priority**:
+7. Web interface
+8. API services
+9. Advanced features
 
 ---
 
@@ -143,6 +318,11 @@ npm run test:integration
 
 # Run with coverage
 npm run test:coverage
+
+# Run Superpowers integration tests
+node test-hooks.js      # Hook system tests
+node test-commands.js   # Command system tests
+node test-plugin-manual.js  # Plugin tests
 ```
 
 ### Writing Tests
@@ -286,10 +466,20 @@ Any mockups, examples, or references
 
 ## 🎓 Resources
 
+### Core Documentation
 - [Project Documentation](./docs/)
 - [API Reference](./docs/API-REFERENCE.md)
 - [User Guide](./docs/USER-GUIDE.md)
 - [Architecture Overview](./docs/architecture.md)
+
+### Superpowers Integration
+- [Quick Start Guide](./QUICK-START.md) - 5-minute introduction
+- [Final Integration Summary](./FINAL-INTEGRATION-SUMMARY.md) - Complete overview
+- [Roadmap](./ROADMAP.md) - Future development plans
+- [Hook System Guide](./docs/HookSystem.md) - Detailed hook documentation
+- [Plan C Report](./PLAN-C-INTEGRATION-COMPLETE.md) - Command system details
+- [Plan B Report](./PLAN-B-INTEGRATION-COMPLETE.md) - Hook system details
+- [100% Integration Report](./SUPERPOWERS-100-PERCENT-INTEGRATION.md) - Skills details
 
 ---
 
