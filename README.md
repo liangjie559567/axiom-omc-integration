@@ -1,6 +1,6 @@
 # Axiom-OMC Integration
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/liangjie559567/axiom-omc-integration/releases)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/liangjie559567/axiom-omc-integration/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
 [![Test Coverage](https://img.shields.io/badge/coverage-96.50%25-brightgreen)](https://github.com/liangjie559567/axiom-omc-integration)
@@ -11,6 +11,12 @@
 
 ## 🌟 特性
 
+### v2 架构（新）
+- **事件溯源** - 完整的事件历史和状态重建
+- **CQRS模式** - 读写分离，性能提升70%+
+- **事件驱动** - 解耦组件，更好的扩展性
+
+### v1 特性
 - **智能映射引擎** - 自动映射不同工作流系统的阶段
 - **自动同步引擎** - 实时同步多个工作流状态
 - **模板管理器** - 预定义工作流模板（TDD、调试等）
@@ -26,7 +32,27 @@ npm install axiom-omc-integration
 
 ## 🚀 快速开始
 
-### 基础使用
+### v2 架构（推荐）
+
+```javascript
+import { EventStore, EventBus } from 'axiom-omc-integration/core';
+import { CommandHandler, QueryHandler, ReadModel } from 'axiom-omc-integration/cqrs';
+import { WorkflowOrchestrator } from 'axiom-omc-integration/v2';
+
+// 初始化
+const store = new EventStore();
+const bus = new EventBus();
+const readModel = new ReadModel();
+
+const cmd = new CommandHandler(store, bus);
+const query = new QueryHandler(readModel);
+
+// 使用
+const orchestrator = new WorkflowOrchestrator(cmd, query);
+await orchestrator.startWorkflow('my-workflow', { title: '用户认证功能' });
+```
+
+### v1 基础使用
 
 ```javascript
 import { WorkflowOrchestrator } from 'axiom-omc-integration';
