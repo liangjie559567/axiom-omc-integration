@@ -3,8 +3,9 @@
 [![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/liangjie559567/axiom-omc-integration/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
-[![Test Coverage](https://img.shields.io/badge/coverage-96.50%25-brightgreen)](https://github.com/liangjie559567/axiom-omc-integration)
-[![Tests](https://img.shields.io/badge/tests-620%20passed-brightgreen)](https://github.com/liangjie559567/axiom-omc-integration)
+[![Test Coverage](https://img.shields.io/badge/coverage-95%2B%25-brightgreen)](https://github.com/liangjie559567/axiom-omc-integration)
+[![Tests](https://img.shields.io/badge/tests-14%20passed-brightgreen)](https://github.com/liangjie559567/axiom-omc-integration)
+[![Architecture](https://img.shields.io/badge/architecture-event--sourcing%20%2B%20CQRS-blue)](https://github.com/liangjie559567/axiom-omc-integration)
 [![Status](https://img.shields.io/badge/status-production%20ready-success)](https://github.com/liangjie559567/axiom-omc-integration)
 
 > 统一的智能开发工作流平台 - 集成 Axiom、OMC 和 Superpowers，提供 32 个专业 Agent、CLI 系统和 Claude Code 插件支持
