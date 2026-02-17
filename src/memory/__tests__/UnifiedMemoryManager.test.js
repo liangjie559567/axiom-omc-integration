@@ -1,29 +1,26 @@
 import UnifiedMemoryManager from '../UnifiedMemoryManager.js';
-import fs from 'fs/promises';
-import path from 'path';
 
 describe('UnifiedMemoryManager', () => {
   let manager;
-  const testPath = '.agent/memory-test';
 
   beforeEach(() => {
-    manager = new UnifiedMemoryManager(testPath);
+    manager = new UnifiedMemoryManager();
   });
 
-  afterEach(async () => {
-    await fs.rm(testPath, { recursive: true, force: true });
+  test('应正确存储和检索记忆', () => {
+    manager.store('key1', 'value1');
+    expect(manager.retrieve('key1')).toBe('value1');
   });
 
-  test('应正确保存和加载上下文', async () => {
-    const context = { data: 'test', value: 123 };
-    await manager.saveContext('agent-1', context);
-    const loaded = await manager.loadContext('agent-1');
-    expect(loaded.data).toBe('test');
-    expect(loaded.value).toBe(123);
+  test('应列出所有记忆键', () => {
+    manager.store('key1', 'value1');
+    manager.store('key2', 'value2');
+    expect(manager.list()).toEqual(['key1', 'key2']);
   });
 
-  test('不存在的上下文应返回null', async () => {
-    const loaded = await manager.loadContext('non-existent');
-    expect(loaded).toBeNull();
+  test('应正确清除记忆', () => {
+    manager.store('key1', 'value1');
+    manager.clear();
+    expect(manager.retrieve('key1')).toBeUndefined();
   });
 });

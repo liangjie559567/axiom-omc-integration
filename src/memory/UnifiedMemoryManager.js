@@ -1,31 +1,23 @@
-import fs from 'fs/promises';
-import path from 'path';
-
 class UnifiedMemoryManager {
-  constructor(basePath = '.agent/memory') {
-    this.basePath = basePath;
-    this.contextPath = path.join(basePath, 'context.json');
+  constructor() {
+    this.memories = new Map();
   }
 
-  async saveContext(agentId, context) {
-    await fs.mkdir(this.basePath, { recursive: true });
-    const data = await this._loadAll();
-    data[agentId] = { ...context, timestamp: Date.now() };
-    await fs.writeFile(this.contextPath, JSON.stringify(data, null, 2));
+  store(key, value) {
+    this.memories.set(key, { value, timestamp: Date.now() });
+    return true;
   }
 
-  async loadContext(agentId) {
-    const data = await this._loadAll();
-    return data[agentId] || null;
+  retrieve(key) {
+    return this.memories.get(key)?.value;
   }
 
-  async _loadAll() {
-    try {
-      const content = await fs.readFile(this.contextPath, 'utf8');
-      return JSON.parse(content);
-    } catch {
-      return {};
-    }
+  clear() {
+    this.memories.clear();
+  }
+
+  list() {
+    return Array.from(this.memories.keys());
   }
 }
 

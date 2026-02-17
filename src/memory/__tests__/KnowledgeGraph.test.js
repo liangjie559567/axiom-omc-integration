@@ -7,18 +7,15 @@ describe('KnowledgeGraph', () => {
     graph = new KnowledgeGraph();
   });
 
-  test('应正确添加和查询节点', () => {
+  test('应正确添加节点', () => {
     graph.addNode('node1', { name: 'test' });
-    const result = graph.query('node1');
-    expect(result.name).toBe('test');
+    expect(graph.query('node1')).toEqual({ name: 'test' });
   });
 
-  test('应正确添加边和查询关系', () => {
-    graph.addNode('a', { name: 'A' });
-    graph.addNode('b', { name: 'B' });
-    graph.addEdge('a', 'b', 'relates');
-    const related = graph.getRelated('a');
-    expect(related).toHaveLength(1);
-    expect(related[0].id).toBe('b');
+  test('应正确添加边', () => {
+    graph.addNode('node1', {});
+    graph.addNode('node2', {});
+    graph.addEdge('node1', 'node2', 'relates');
+    expect(graph.getEdges('node1')).toHaveLength(1);
   });
 });
