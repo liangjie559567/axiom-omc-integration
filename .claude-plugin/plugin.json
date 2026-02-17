@@ -1,8 +1,8 @@
 {
   "id": "axiom-omc",
   "name": "axiom-omc-integration",
-  "description": "Axiom + OMC 智能开发整合系统 - 提供命令路由、状态同步、质量门、知识演化和记忆管理功能",
-  "version": "1.0.0",
+  "description": "Unified intelligent development workflow platform - Integration of Axiom, OMC and Superpowers with 32 professional agents, CLI system, and Claude Code plugin support",
+  "version": "2.1.0",
   "author": {
     "name": "CGTall AutoPipeline Team",
     "email": "team@cgtall.com"
@@ -13,7 +13,11 @@
   "keywords": [
     "axiom",
     "omc",
+    "superpowers",
     "integration",
+    "skills",
+    "agents",
+    "workflow",
     "command-routing",
     "state-sync",
     "quality-gates",
