@@ -1,27 +1,18 @@
-import agentDefinitions from './AgentDefinitions.js';
-
 class AgentRouter {
   constructor() {
-    this.agents = agentDefinitions;
+    this.routes = new Map();
   }
 
-  getAgent(name) {
-    return this.agents[name];
+  register(taskType, agentId) {
+    this.routes.set(taskType, agentId);
   }
 
-  selectAgent(taskType) {
-    const typeMap = {
-      implementation: 'executor',
-      verification: 'verifier',
-      debugging: 'debugger',
-      planning: 'planner',
-      analysis: 'analyst'
-    };
-    return this.agents[typeMap[taskType]];
+  route(taskType) {
+    return this.routes.get(taskType);
   }
 
-  listAgents() {
-    return Object.keys(this.agents);
+  list() {
+    return Array.from(this.routes.entries());
   }
 }
 
