@@ -7,10 +7,14 @@ class GateValidator {
     this.rules.set(stage, validator);
   }
 
-  async validate(stage, context) {
+  validate(stage, context) {
     const validator = this.rules.get(stage);
-    if (!validator) return { valid: true };
-    return await validator(context);
+    if (!validator) return true;
+    return validator(context);
+  }
+
+  clear() {
+    this.rules.clear();
   }
 }
 

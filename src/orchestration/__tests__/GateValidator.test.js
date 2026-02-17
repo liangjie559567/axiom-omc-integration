@@ -7,14 +7,13 @@ describe('GateValidator', () => {
     validator = new GateValidator();
   });
 
-  test('应正确添加规则', () => {
-    validator.addRule('test', async () => ({ valid: true }));
-    expect(validator.rules.size).toBe(1);
+  test('应添加和执行验证规则', () => {
+    validator.addRule('stage1', (ctx) => ctx.valid === true);
+    expect(validator.validate('stage1', { valid: true })).toBe(true);
+    expect(validator.validate('stage1', { valid: false })).toBe(false);
   });
 
-  test('应正确验证阶段', async () => {
-    validator.addRule('test', async () => ({ valid: true }));
-    const result = await validator.validate('test', {});
-    expect(result.valid).toBe(true);
+  test('无规则时应通过验证', () => {
+    expect(validator.validate('stage1', {})).toBe(true);
   });
 });
