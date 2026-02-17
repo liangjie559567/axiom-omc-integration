@@ -244,10 +244,10 @@ export class HookSystem {
             ...result
           });
 
-          executed++;
-          this.stats.executed++;
-
-          if (!result.success) {
+          if (result.success) {
+            executed++;
+            this.stats.executed++;
+          } else {
             this.stats.failed++;
           }
         } catch (error) {

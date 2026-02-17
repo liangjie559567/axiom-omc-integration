@@ -2,7 +2,7 @@
  * HookSystem 测试
  */
 
-import { HookSystem, HookContext, HookExecutor } from '../src/core/HookSystem.js';
+import { HookSystem, HookContext, HookExecutor } from '../../src/core/HookSystem.js';
 import { describe, it, expect, beforeEach } from '@jest/globals';
 
 describe('HookSystem', () => {
