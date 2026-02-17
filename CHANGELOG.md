@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.0.1] - 2026-02-17
+
+### ✨ Added - CLI 用户体验优化
+
+#### 增强的日志系统
+- 时间戳显示（可配置）
+- 日志级别标识
+- 进度条显示 `logger.progress()`
+- 实时操作反馈 `logger.action()`
+- 结构化日志输出
+
+#### 交互式功能
+- 确认提示 `Interactive.confirm()`
+- 选项选择 `Interactive.select()`
+- 环境变量控制（NO_CONFIRM）
+
+#### 文档和示例
+- CLI 用户体验指南
+- 交互式演示脚本
+
+### 🔧 Changed
+- Logger 构造函数支持选项参数
+- CLI 系统集成交互式确认
+
+### ✅ Tests
+- 新增 3 个 Logger 测试用例
+- 所有测试通过（10/10）
+
+---
+
 ## [2.1.0] - 2026-02-17
 
 ### 🎉 Initial Release

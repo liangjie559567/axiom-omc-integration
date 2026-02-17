@@ -13,6 +13,9 @@ describe('CLI 系统测试', () => {
   let testDir;
 
   beforeAll(async () => {
+    // 禁用交互式确认
+    process.env.NO_CONFIRM = '1';
+
     testDir = join(process.cwd(), 'test-cli');
 
     if (!existsSync(testDir)) {

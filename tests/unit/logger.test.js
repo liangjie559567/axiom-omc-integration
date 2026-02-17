@@ -40,4 +40,19 @@ describe('Logger', () => {
     expect(errorSpy).toHaveBeenCalled();
     errorSpy.mockRestore();
   });
+
+  it('应该显示进度', () => {
+    logger.progress('处理中', 50, 100);
+    expect(consoleSpy).toHaveBeenCalled();
+  });
+
+  it('应该显示操作反馈', () => {
+    logger.action('executor', '执行任务', 'running');
+    expect(consoleSpy).toHaveBeenCalled();
+  });
+
+  it('应该支持自定义选项', () => {
+    const customLogger = new Logger('Custom', { showTimestamp: false });
+    expect(customLogger.showTimestamp).toBe(false);
+  });
 });

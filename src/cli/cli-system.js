@@ -9,8 +9,9 @@ import { createStateSynchronizer } from '../core/state-synchronizer.js';
 import { createMemorySystem } from '../core/memory-system.js';
 import { createWorkflowIntegration } from '../core/workflow-integration.js';
 import { Logger } from '../core/logger.js';
+import { Interactive } from '../core/interactive.js';
 
-const logger = new Logger('CLI');
+const logger = new Logger('CLI', { showTimestamp: true });
 
 /**
  * CLI 系统类
@@ -105,6 +106,22 @@ export class CLISystem {
         throw new Error(`Agent 不存在: ${agentId}`);
       }
 
+      // 交互式确认（可通过环境变量禁用）
+      if (!process.env.NO_CONFIRM) {
+        const confirmed = await Interactive.confirm(
+          `确认执行 Agent "${agent.name}"?`,
+          true
+        );
+        if (!confirmed) {
+          return {
+            success: false,
+            message: '用户取消执行'
+          };
+        }
+      }
+
+      logger.action(agent.name, '准备执行', 'running');
+
       // 创建执行记录
       const execution = {
         id: this._generateId(),
@@ -121,6 +138,8 @@ export class CLISystem {
       // 添加到执行器队列（异步执行，不等待）
       this.agentSystem.executor.executionQueue.push(execution);
       this.agentSystem.executor._processQueue();
+
+      logger.action(agent.name, '执行已启动', 'success');
 
       return {
         success: true,
