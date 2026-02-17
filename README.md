@@ -124,6 +124,27 @@ npm run format
 
 ## 🎯 核心模块
 
+### Superpowers 技能系统
+集成了 12 个 Superpowers 工作流技能（100% 完整集成）：
+
+**核心工作流**：
+- **brainstorming** - 需求澄清和设计探索
+- **writing-plans** - 编写详细实现计划
+- **executing-plans** - 批量执行计划（带检查点）
+- **subagent-driven-development** - 子代理驱动开发
+- **finishing-a-development-branch** - 标准化分支完成流程
+
+**质量保证**：
+- **test-driven-development** - TDD 循环（RED-GREEN-REFACTOR）
+- **systematic-debugging** - 系统化调试（4 阶段根因分析）
+- **verification-before-completion** - 完成前验证
+- **requesting-code-review** - 请求代码审查
+- **receiving-code-review** - 接收代码审查反馈
+
+**协作工具**：
+- **using-git-worktrees** - 并行开发分支
+- **dispatching-parallel-agents** - 并发子代理工作流
+
 ### Agent 系统
 32 个专业 Agent，分为 6 个功能 Lane：
 - **Architect Lane**: 架构设计
@@ -183,6 +204,8 @@ npm run format
 - [原有 API 文档](./docs/API.md)
 - [集成计划](./.claude/integration-plan.md)
 - [阶段 1 完成报告](./.claude/phase-1-completion-report.md)
+- [Superpowers 集成报告](./SUPERPOWERS-INTEGRATION-REPORT.md)
+- [Superpowers 对比分析](./SUPERPOWERS-COMPARISON.md)
 
 ## 🤝 贡献
 
