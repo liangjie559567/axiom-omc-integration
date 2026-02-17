@@ -1,4 +1,5 @@
 {
+  "id": "axiom-omc",
   "name": "axiom-omc-integration",
   "description": "Axiom + OMC 智能开发整合系统 - 提供命令路由、状态同步、质量门、知识演化和记忆管理功能",
   "version": "1.0.0",
