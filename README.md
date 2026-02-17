@@ -1,6 +1,6 @@
 # Axiom-OMC Integration
 
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/liangjie559567/axiom-omc-integration/releases)
+[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](https://github.com/liangjie559567/axiom-omc-integration/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
 [![Test Coverage](https://img.shields.io/badge/coverage-95%2B%25-brightgreen)](https://github.com/liangjie559567/axiom-omc-integration)
@@ -12,7 +12,14 @@
 
 ## 🌟 特性
 
-### v2 架构（新）
+### v2.1 Superpowers 集成（最新）
+- **插件系统** - 完整的 Claude Code 插件配置
+- **Markdown 命令** - 支持 Markdown 格式命令定义
+- **统一钩子** - JSON 配置的钩子系统
+- **适配器层** - CommandAdapter 和 HookAdapter
+- **双格式支持** - Markdown + JavaScript 命令并存
+
+### v2 架构
 - **事件溯源** - 完整的事件历史和状态重建
 - **CQRS模式** - 读写分离，性能提升70%+
 - **事件驱动** - 解耦组件，更好的扩展性
