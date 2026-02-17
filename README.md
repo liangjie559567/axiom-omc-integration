@@ -42,6 +42,18 @@
 
 ## 📦 安装
 
+### Claude Code 插件（推荐）
+
+```bash
+# 添加插件市场
+/plugin marketplace add liangjie559567/axiom-omc-integration
+
+# 安装插件
+/plugin install axiom-omc@axiom-omc-integration
+```
+
+### npm 安装
+
 ```bash
 npm install axiom-omc-integration
 ```
